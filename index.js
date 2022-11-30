@@ -2,9 +2,33 @@ const Manager = require('./lib/manager');
 const Intern = require('./lib/intern');
 const Engineer = require('./lib/engineer');
 var inquirer = require("inquirer");
+const fs = require("fs");
 var internList = [];
 var engineerList = [];
 var teamManagerObj = {};
+
+var topHTML = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portfolio Generator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+<body class="w-100 h-100">
+  <header class="d-flex w-100" style="background-color:cadetblue;">
+    <h1>My Team</h1>
+  </header>
+  <div class="d-flex text-bg-light flex-wrap">`;
+
+  var bottomHTML = `</div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+</body>
+</html>`;
+
 
 var teamManager = [
     {
@@ -110,13 +134,20 @@ function addTeamMember() {
         .then((answers) => {
             if (answers.mainChoice == "Intern") {
                 internQuestions();
+                return;
             }
             if (answers.mainChoice == "Engineer") {
                 engineerQuestions();
+                return;
             }
-            console.log(internList);
-            console.log(engineerList);
-            console.log(teamManagerObj);
+            let cards = [makeCard(teamManagerObj)];
+            engineerList.forEach(x => {
+                cards.push(makeCard(x));
+            })
+            internList.forEach(x => {
+                cards.push(makeCard(x));
+            });
+            generatesHTML(cards);
         })
         .catch((error) => {
             if (error.isTtyError) {
@@ -157,6 +188,36 @@ function engineerQuestions() {
                 console.log(error)
             }
         })
+}
+
+function makeCard(obj) {
+    let temp = "";
+    if (typeof obj.getGithub === "function") {
+        temp = `<a class="d-flex justify-content-center card-link text-light" style="margin: 10px 0;" href="https://www.github.com/${obj.getGithub()}">${obj.getGithub()}</a>`
+    }
+    if (typeof obj.getSchool === "function") {
+        temp = `<p class="d-flex justify-content-center card-text">${obj.getSchool()}</p>`
+    }
+    if (typeof obj.getOfficeNumber === "function") {
+        temp = `<p class="d-flex justify-content-center card-text">${obj.getOfficeNumber()}</p>`
+    }
+    let card = `
+    <div class="d-flex justify-content-center align-items-center card text-bg-primary" style="width: 18rem;">
+      <div class="card-body">
+        <p class="d-flex justify-content-center card-text">${obj.getName()}</p>
+        <p class="d-flex justify-content-center card-text">${obj.getRole()}</p>
+        <p class="d-flex justify-content-center card-text">${obj.getId()}</p>
+        <a class="d-flex justify-content-center card-link text-light"
+          href="mailto:${obj.getEmail()}">${obj.getEmail()}</a>
+          ${temp}
+      </div>
+    </div>`;
+    return card;
+}
+
+function generatesHTML(cards) {
+    let html = topHTML + cards.concat() + bottomHTML;
+    fs.writeFileSync(`./dist/index.html`, html);
 }
 
 init();
