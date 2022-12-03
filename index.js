@@ -17,12 +17,12 @@ var topHTML = `<!doctype html>
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body class="w-100 h-100">
-  <header class="d-flex w-100" style="background-color:cadetblue;">
+<header class="d-flex justify-content-center align-items-center w-100" style="background-color:cadetblue; height: 150px;">
     <h1>My Team</h1>
   </header>
-  <div class="d-flex text-bg-light flex-wrap">`;
+  <div class="d-flex flex-wrap justify-content-center">`;
 
-  var bottomHTML = `</div>
+var bottomHTML = `</div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
     crossorigin="anonymous"></script>
@@ -193,22 +193,22 @@ function engineerQuestions() {
 function makeCard(obj) {
     let temp = "";
     if (typeof obj.getGithub === "function") {
-        temp = `<a class="d-flex justify-content-center card-link text-light" style="margin: 10px 0;" href="https://www.github.com/${obj.getGithub()}">${obj.getGithub()}</a>`
+        temp = `<a class="d-flex justify-content-center card-link text-light text-decoration-none fs-5" style="margin: 10px 0; overflow-wrap: anywhere;" href="https://www.github.com/${obj.getGithub()}">Github: ${obj.getGithub()}</a>`
     }
     if (typeof obj.getSchool === "function") {
-        temp = `<p class="d-flex justify-content-center card-text">${obj.getSchool()}</p>`
+        temp = `<p class="d-flex justify-content-center card-text fs-5" style="margin: 10px 0; overflow-wrap: anywhere;">School: ${obj.getSchool()}</p>`
     }
     if (typeof obj.getOfficeNumber === "function") {
-        temp = `<p class="d-flex justify-content-center card-text">${obj.getOfficeNumber()}</p>`
+        temp = `<p class="d-flex justify-content-center card-text fs-5" style="margin: 10px 0; overflow-wrap: anywhere;">Office Number: ${obj.getOfficeNumber()}</p>`
     }
     let card = `
-    <div class="d-flex justify-content-center align-items-center card text-bg-primary" style="width: 18rem;">
+    <div class="d-flex justify-content-center align-items-center card text-bg-info" style="width: 18rem; margin: 35px 35px;">
       <div class="card-body">
-        <p class="d-flex justify-content-center card-text">${obj.getName()}</p>
-        <p class="d-flex justify-content-center card-text">${obj.getRole()}</p>
-        <p class="d-flex justify-content-center card-text">${obj.getId()}</p>
-        <a class="d-flex justify-content-center card-link text-light"
-          href="mailto:${obj.getEmail()}">${obj.getEmail()}</a>
+        <p class="d-flex justify-content-center card-text fs-2" style="overflow-wrap: anywhere;">${obj.getName()}</p>
+        <p class="d-flex justify-content-center card-text border-bottom border-primary fs-2" style="overflow-wrap: anywhere;">${obj.getRole()}</p>
+        <p class="d-flex justify-content-center card-text fs-5" style="overflow-wrap: anywhere;">Id: ${obj.getId()}</p>
+        <a class="d-flex justify-content-center card-link text-light text-wrap text-decoration-none fs-5" style="overflow-wrap: anywhere;"
+          href="mailto:${obj.getEmail()}">Email: ${obj.getEmail()}</a>
           ${temp}
       </div>
     </div>`;
@@ -216,7 +216,7 @@ function makeCard(obj) {
 }
 
 function generatesHTML(cards) {
-    let html = topHTML + cards.concat() + bottomHTML;
+    let html = topHTML + cards.join().replaceAll(',', '') + bottomHTML;
     fs.writeFileSync(`./dist/index.html`, html);
 }
 
