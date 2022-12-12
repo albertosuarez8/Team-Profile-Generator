@@ -8,11 +8,8 @@ This application allows users to dynamically create a styled HTML page with team
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
 - [Tests](#tests)
 - [Questions](#questions)
-- [License](#license)
-
 
 ## Installation
 
